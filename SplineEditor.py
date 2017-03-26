@@ -23,8 +23,12 @@ colors = S.vstack([d[:,colnum],S.zeros(d.shape[0]),S.zeros(d.shape[0])]).T
 colors -= colors.min()
 colors*=S.power(colors.max(),-1.0)
 
+ap_line = None
 
-ap_line = S.array([[-213.1,13.5],
+try:
+    ap_line = S.loadtxt("spline_points.txt")
+except:
+    ap_line = S.array([[-213.1,13.5],
                     [-90.67,5.46],
                     [-52.56,1.54],
                     [-15.34,0.622],
@@ -33,6 +37,7 @@ ap_line = S.array([[-213.1,13.5],
                     [78.38,3.39],
                     [118.3,7.54],
                     [187.8,16.3]])
+
 
 
 
