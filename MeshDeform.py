@@ -18,12 +18,6 @@ y = d[:,1]
 z = d[:,2]
 
 
-colnum = results[0]["column"].index("eve__4")-1
-
-colors = S.vstack([d[:,colnum],S.zeros(d.shape[0]),S.zeros(d.shape[0])]).T
-colors -= colors.min()
-colors*=S.power(colors.max(),-1.0)
-
 ap_line = None
 
 
@@ -61,9 +55,20 @@ new_xy = S.vstack([S.hstack([i*S.ones((SAMPLE_NUMBER,1)), ts.reshape(-1,1)]) for
 new_xs = griddata(old_xy, new_xy[:,0], (x, z), method='linear')
 new_ys = griddata(old_xy, new_xy[:,1], (x, z), method='linear')
 
+disp_genes = ["eve__1","eve__2","eve__3","bcdP__3","eve__4"]
 
-fig = plt.figure()
-ax = fig.add_subplot(1,1,1)
-ax.scatter(new_xs,new_ys,s=15.0,c=colors)
+for one_gene_name in disp_genes:
+
+    colnum = results[0]["column"].index(one_gene_name)-1
+
+    colors = S.vstack([d[:,colnum],S.zeros(d.shape[0]),S.zeros(d.shape[0])]).T
+    colors -= colors.min()
+    colors*=S.power(colors.max(),-1.0)
+
+    fig = plt.figure(figsize=(4,2))
+    ax = fig.add_subplot(1,1,1)
+    ax.set_title(one_gene_name)
+    ax.scatter(new_xs,new_ys,s=15.0,c=colors)
+    fig.tight_layout()
 
 plt.show()
