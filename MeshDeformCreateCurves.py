@@ -54,13 +54,13 @@ new_xy = S.vstack([S.hstack([i*S.ones((SAMPLE_NUMBER,1)), ts.reshape(-1,1)]) for
 
 new_xs = INTERP.griddata(old_xy, new_xy[:,0], (x, z), method='linear')
 new_ys = INTERP.griddata(old_xy, new_xy[:,1], (x, z), method='linear')
-new_ys = 1.0 -new_ys
+new_ys = new_ys
 
 b_box_x = S.array([0.5, 7.5])
-b_box_y = S.array([0.35, 0.6])
+b_box_y = S.array([0.35, 0.7])
 
-#disp_genes = ["kni__3","D__3","hbP__3","bcdP__3","KrP__3","gt__3","eve__3","odd__3","rho__3","sna__3"]
-disp_genes = ["eve__3"]
+disp_genes = ["kni__3","D__3","hbP__3","bcdP__3","KrP__3","gt__3","eve__3","odd__3","rho__3","sna__3"]
+#disp_genes = ["eve__3"]
 
 for one_gene_name in disp_genes:
 
