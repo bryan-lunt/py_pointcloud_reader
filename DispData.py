@@ -36,7 +36,7 @@ x = data[:,0]
 y = data[:,1]
 z = data[:,2]
 
-colnum = results[0]["column"].index("rho__4")-1
+colnum = results[0]["column"].index("eve__3")-1
 
 colors = S.vstack([data[:,colnum],S.zeros(data.shape[0]),S.zeros(data.shape[0])]).T
 colors -= colors.min()
