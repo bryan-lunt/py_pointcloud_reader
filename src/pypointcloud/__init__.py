@@ -15,6 +15,22 @@ import numpy as _np
 import re as _re
 _entry_finder = _re.compile("^# ([^ ]+) = (.*)$")
 
+def _parse_header(header_string,header_type="plain",dtype=str):
+	"""Type one of "plain", "list", or "listlist".
+	"""
+	header_string = header_string.strip()
+	if header_type == "plain":
+		return dtype(header_string.strip().strip('"'))
+
+	if header_type.startswith("list") and header_string.startswith("[") and header_string.endswith("]"):
+		header_string = header_string[1:-1]
+		#A list type
+	if header_type == "list":
+		return map(dtype,map(lambda x:x.strip().strip('"'), header_string.split(",")))
+	elif header_type == "listlist":
+		return [map(dtype,map(lambda x:x.strip().strip('"'), i.split(","))) for i in header_string.split(";")]
+	raise Exception("Invalid header_type?")	
+
 def read_vpc(infile):
     headers = dict()
     data = None
@@ -33,16 +49,16 @@ def read_vpc(infile):
         headline = infile.readline()
 
 
-    headers["cohort_names"] = map(lambda x: x[1:-1], headers["cohort_names"][1:-1].split(","))
-    headers["cohort_times"] = map(float, headers["cohort_times"][1:-1].split(","))
-    headers["srclist"] = map(lambda x:x[1:-1], headers["srclist"][1:-1].split(","))
-    headers["embryospergene"] = map(lambda x: map(int, x.split(",")), headers["embryospergene"][1:-1].split(";"))
+    headers["cohort_names"] = _parse_header(headers["cohort_names"],"list",str)
+    headers["cohort_times"] = _parse_header(headers["cohort_times"],"list",float)
+    headers["srclist"] = _parse_header(headers["srclist"],"list",str)
+    headers["embryospergene"] = _parse_header(headers["embryospergene"],"listlist",int)
 
-    headers["column_info"] = map(lambda x: tuple(map(lambda y: y[1:-1], x.split(","))), headers["column_info"][1:-1].split(";"))
+    headers["column_info"] = _parse_header(headers["column_info"],"listlist")
 
-    headers["column"] = map(lambda x:x[1:-1],headers["column"][1:-1].split(","))
+    headers["column"] = _parse_header(headers["column"],"list",str)
     n_cols = len(headers["column"])
-    headers["nuclear_count"] = int(headers["nuclear_count"])
+    headers["nuclear_count"] = _parse_header(headers["nuclear_count"],"plain",int)
 
 
     data = _np.zeros((headers["nuclear_count"],len(headers["column"])-1))
